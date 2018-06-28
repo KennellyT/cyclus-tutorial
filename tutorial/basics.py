@@ -12,6 +12,7 @@ import matplotlib
 from matplotlib import cm
 import pyne
 from pyne import nucname
+from operator import itemgetter
 
 # input creation functions
 
@@ -927,18 +928,21 @@ def plot_in_out_flux(cur, facility, influx_bool, title, is_cum = False, is_tot =
                 placeholder.append(value)
             waste_dict[key] = placeholder
         
-        masses = []
         times = []
         nuclides = []
+        masstime = {}
         for element in range(len(keys)):
             time_and_mass = np.array(time_waste[keys[element]])
             time = [item[0] for item in time_and_mass]
             mass = [item[1] for item in time_and_mass]
             nuclide = nucname.name(keys[element])
             mass_cum = np.cumsum(mass)
-            masses.append(mass_cum)
             times.append(time)
             nuclides.append(str(nuclide))
+            masstime[nucname.name(keys[element])] = mass_cum
+        mass_sort = sorted(masstime.items(), key=lambda e: e[1][-1],reverse = True)
+        nuclides = [item[0] for item in mass_sort]
+        masses =[item[1] for item in mass_sort]
         plt.stackplot(times[0],masses,labels = nuclides)
         plt.legend(loc='upper left')
         plt.title(title)
@@ -972,18 +976,22 @@ def plot_in_out_flux(cur, facility, influx_bool, title, is_cum = False, is_tot =
         keys = []
         for key in waste_dict.keys():
             keys.append(key)
-        masses = []
+
         times = []
         nuclides = []
+        masstime = {}
         for element in range(len(keys)):
             time_and_mass = np.array(time_waste[keys[element]])
             time = [item[0] for item in time_and_mass]
             mass = [item[1] for item in time_and_mass]
             nuclide = nucname.name(keys[element])
             mass_cum = np.cumsum(mass)
-            masses.append(mass_cum)
             times.append(time)
             nuclides.append(str(nuclide))
+            masstime[nucname.name(keys[element])] = mass_cum
+        mass_sort = sorted(masstime.items(), key=lambda e: e[1][-1],reverse = True)
+        nuclides = [item[0] for item in mass_sort]
+        masses =[item[1] for item in mass_sort]
         plt.stackplot(times[0],masses,labels = nuclides)
         plt.legend(loc='upper left')
         plt.title(title)
@@ -991,39 +999,8 @@ def plot_in_out_flux(cur, facility, influx_bool, title, is_cum = False, is_tot =
         plt.ylabel('mass [kg]')
         plt.xlim(left = 0.0)
         plt.ylim(bottom = 0.0)
-        plt.show()   
-            #nuclides = [keys[0],keys[1],keys[2],keys[3]]
-            #plt.stackplot(time,mass, label = nuclides)
-# =============================================================================
-# 
-#         for element in range(len(waste_dict.keys())):
-#             placeholder =[]
-#             value = 0
-#             key = keys[element]
-#             
-#             for index in range(len(waste_dict[key])):
-#                 value += waste_dict[key][index]
-#                 placeholder.append(value)
-#             waste_dict[key] = placeholder
-#             
-#         total_mass = np.zeros(len(waste_dict[keys[0]]))
-#         for element in range(len(keys)):
-#             for index in range(len(waste_dict[keys[0]])):
-#                 total_mass[index] += waste_dict[keys[element]][index]
-#                 
-# =============================================================================
-        #plt.plot(total_mass, linestyle = '-', linewidth = 1)
-        #plt.plot(time,mass_cum,linestyle = ' ',marker = '.',markersize = 1, label = keys[0])
-        #plt.legend()
-        #plt.title(title)
-        #plt.xlabel('time [months]')
-        #plt.ylabel('mass [kg]')
-        #plt.xlim(left = 0.0)
-        #plt.ylim(bottom = 0.0)
-        #plt.show()
-        #return keys,mass_cum,len(total_mass),len(waste_dict.keys())
-
-        
+        plt.show()
+          
 
 def u_util_calc(cur):
     """Returns fuel utilization factor of fuel cycle
