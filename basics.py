@@ -812,7 +812,7 @@ def get_waste_dict(isotope_list, time_mass_list, duration):
                         
             waste_dict[keys[element]] = masses1
     
-    return waste_dict
+    return waste_dict,time_mass_list
 
 
 def plot_in_out_flux(cur, facility, influx_bool, title, is_cum = False, is_tot = False):
