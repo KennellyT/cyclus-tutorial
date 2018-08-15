@@ -133,8 +133,8 @@
                <val>spent-uox</val>
              </feed_commods>
              <feed_commod_prefs>
+               <!--val>1.0</val-->
                <val>1.0</val>
-              <!--val>1.0</val-->
              </feed_commod_prefs>
              <feedbuf_size>1E100</feedbuf_size>
              <throughput>1E100</throughput>
